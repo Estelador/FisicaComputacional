@@ -1,75 +1,84 @@
-#include<iostream>
-#include<cmath>
-#include<fstream>
-
+#include <iostream>
+#include <cmath>
+#include <fstream>
 
 using namespace std;
 
-//definimos ctes
+// definimos ctes
 #define MS 1.99e30
-#define N 10
-#define M 3
+#define N 9
 
-//declaro una función que lea un archivo de datos y me lo pase a una matriz NxM double
-void leer_matriz(double matrix[N][M]);
-//declaro una función que muestre una matriz NxM double
-void mostrar_matriz(double matrix[N][M]);
+// declaro una función que lea un archivo de datos y me lo pase a una vector NxM double
+void leer_vector(double vector[N],string nombre);
+// declaro una función que muestre una vector NxM double
+void mostrar_vector(double vector[N]);
 
+/*
+// declaramos función reescalar masa
+void reesc_masa(double vector[N]);
+// declaramos función calcular a(0) */
 
-//declaramos función reescalar masa
-void reesc_masa(double matrix[N][M]);
-//declaramos función calcular a(0)
+int main(void)
+{
 
+    // declaro un vector N double para masas iniciales
+    double vect_m[N];
+    // declaro un vector N double para velocidades iniciales
+    double vect_v[N];
+    // declaro un vector N double para distancias r iniciales
+    double vect_r[N];
 
-int main(void){
+    // uso la función leer vector para m0
+    leer_vector(vect_m,"m0.dat");
+    // uso la función leer vector para v0
+    leer_vector(vect_v,"vel0.dat");
+    // uso la función leer vector para r0
+    leer_vector(vect_r,"r0.dat");
 
-    //declaro una matriz NxM double
-    double matrix[N][M];
-
-    //uso la función leer matriz
-    leer_matriz(matrix);
-
-    //uso la función mostrar matriz
-    mostrar_matriz(matrix);
+    // uso la función mostrar vector para m0
+    mostrar_vector(vect_m);
+    cout<<"\n";
+    // uso la función mostrar vector para v0
+    mostrar_vector(vect_v);
+    cout<<"\n";
+    // uso la función mostrar vector para r0
+    mostrar_vector(vect_r);
 
     return 0;
 }
 
-//defino la función leer matriz
-void leer_matriz(double matrix[N][M]){
-    int i,j;
+// defino la función leer vector
+void leer_vector(double vector[N],string nombre)
+{
+    int i;
     ifstream fich;
 
-    fich.open("datos0.dat");
+    fich.open(nombre);
 
-    for(i=0;i<N;i++)
-        for(j=0;j<M;j++)
-            fich>>matrix[i][j];
-
+    for (i = 0; i < N; i++)
+        fich >> vector[i];
 
     fich.close();
 
     return;
 }
 
-//defino la función mostrar matriz
-void mostrar_matriz(double matrix[N][M])
-{   int i,j;
-    
-    for(i=0;i<N;i++)
-        for(j=0;j<M;j++)
-            cout<<matrix[i][j]<<"   ";
+// defino la función mostrar vector
+void mostrar_vector(double vector[N])
+{
+    int i;
+
+    for (i = 0; i < N; i++)
+        cout << vector[i] << "   ";
 
     return;
 }
+/*
+void reesc_masa(double vector[N])
+{
+    int i, j;
 
-/*void reesc_masa(double matrix[N][M]){
-    int i,j;
-
-    for(i=)
-}*/
-
-
-
-//definimos funcion calcular aceleracion
-
+    for (i =)
+}
+*/
+// definimos funcion calcular aceleracion
