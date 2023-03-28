@@ -28,7 +28,7 @@ void reesc_v(double vector[N]);
 
 
 // declaramos función calcular a(0)
-void calc_a0(double vector1[N],double vector2[N]);
+void calc_a0(double vector[N],double vector1[N],double vector2[N]);
 
 int main(void)
 {
@@ -44,9 +44,10 @@ int main(void)
     // declaro un vector N double para distancias r_y
     double vect_r_y[N];
 
-    //declaro un vector N double para aceleraciones
-    double a[N];
-
+    //declaro un vector N double para aceleraciones a_x
+    double a_x[N];
+    //declaro un vector N double para aceleraciones a_y
+    double a_y[N];
 
     // uso la función leer vector para m0
     leer_vector(vect_m,"m0.dat");
@@ -65,9 +66,11 @@ int main(void)
     mostrar_vector(vect_r_x);
     cout<<"\n";
 
-    //inicializo a cero r0_y y v0_x
+    //inicializo a cero r0_y , v0_x , a_x y a_y
     inic0(vect_r_y);
     inic0(vect_v_x);
+    inic0(a_x);
+    inic0(a_y);
 
     //reescalo la masa y muestro
     reesc_masa(vect_m);
@@ -78,6 +81,20 @@ int main(void)
     //reescalo v_y y muestro
     reesc_v(vect_v_y);
     cout<<"\n";
+
+    //calulo la aceleración
+    calc_a0(a_x,vect_m,vect_r_x);
+    
+    calc_a0(a_y,vect_m,vect_r_y);
+
+    cout<<a_x[1]<<"\n";
+
+    mostrar_vector(a_x);
+    cout<<"\n";
+    mostrar_vector(a_y);
+    cout<<"\n";
+
+
 
 
     return 0;
@@ -151,7 +168,18 @@ void reesc_v(double vector[N])
 }
 
 // definimos funcion calcular aceleracion
-void calc_a0(double vector1[N],double vector2[N]){
+void calc_a0(double vector[N],double vector1[N],double vector2[N]){
     int i,j;
+    
+    for(i=0;i<N;i++){
 
+        for(j=0;j<N;j++){
+            if(i=!0){
+            vector[i]=(vector1[j])*(vector2[i]-vector2[j])/(pow((abs(vector2[i]-vector2[j])),3));
+            }
+        }
+
+        vector[i]=-vector[i];
+    }
+    return;
 }
