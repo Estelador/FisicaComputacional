@@ -37,15 +37,18 @@ void calc_w(double h,double vector[N],double v1[N],double v2[N]);
 //declaro función calcular v(h)
 void calc_vh(double h,double vector[N],double v1[N],double v2[N]);
 
-//declaro función calcular periodo T
-void calc_T(double v[N],double v1[N],double temp);
-
 //declaro función calcular Energía
 double calc_E(double ep[N],double ec[N],double v1[N],double v2[N],double v3[N],double v4[N],double v5[N]);
+double calc_energia(double vx[N],double vy[N],double x[N],double m[N],double y[N]);
 
+//func reesc t
+double reesc_t(double t);
 
 int main(void)
 {
+
+    //booleanos
+    bool cont[N], cond[N], compr[N];
     // declaro un vector N double para masas
     double vect_m[N];
     // declaro un vector N double para velocidades v_y
@@ -66,9 +69,10 @@ int main(void)
     double w_x[N];
     double w_y[N];
 
-    //decl vector T periodo
-    double T[N];
+    //decl vector tp periodo
+    double tp[N];
     //decl vectores ec y ep 
+    double E;
     double ec[N];
     double ep[N];    
     
@@ -80,11 +84,12 @@ int main(void)
     //declaro temporizador para el periodo
     double temp;
     //declaro ficheros salida
-    ofstream pos,period,energ;
+    ofstream pos,energ,periodo,energia;
     
     //Abrimos los archivos
-    period.open("Periodos.txt");
+    periodo.open("Periodos.txt");
     energ.open("Energia.txt");
+    energia.open("Energiaa.txt");
     pos.open("PosicionesPlanets.txt");
    
 
@@ -152,11 +157,44 @@ int main(void)
     //miro cuantos pasos tendrá mi bucle
     pasos=t/h;
 
+    int b;
+    for(b=0;b<N;b++){
+        cond[b]= false;
+        cont[b]= false;
+        compr[b]=false;
+    }
+
+
     int n;
     //empiezo el bucle
     for(n=0;n<pasos;n++){
 
+        
+        //Vamos a volcar las energias en un fichero con el tiempo
+        E= calc_energia(vect_v_x,vect_v_y,vect_r_x,vect_r_y, vect_m);
+        energia << n <<  "  " << E << endl;
+        
 
+       //Vamos a comprobar periodos
+       int k;
+       for(k=0;k<N;k++){
+            if(vect_r_y[k]<0){
+                cond[k]= true;
+                tp[k]=k;
+            }
+
+            if(cond[k]==true && vect_r_y[k]>0){
+                cont[k] = true;
+            }
+            
+            if(cond[k]== true && cont[k]==true && compr[k]== false){
+                if(vect_r_y[k]<0){
+                    periodo << "Periodo:" << (n-tp[k])/546 << ", Planeta: " << k << endl;
+                    compr[k]= true;
+                }
+                
+            }
+        }
         //calculo rh
         calc_rh(h,vect_r_x,vect_r_x,vect_v_x,a_x);
         calc_rh(h,vect_r_y,vect_r_y,vect_v_y,a_y);
@@ -181,8 +219,6 @@ int main(void)
 
         temp=h+temp;
 
-        //calculo periodo
-        calc_T(T,vect_r_y,temp);
 
         //inicializo energias
         inic0(ec);
@@ -193,23 +229,20 @@ int main(void)
 
     }
 
-        //imprimo periodo
-        int j;
-        for (j=1;j<N;j++){
-            period<<scientific<<setprecision(6)<<T[j]/(sqrt(G*MS/(C*C*C))*3600*24)<<"\n";
-        }
 
         //cierro archivos
         pos.close();
-        period.close();
+        periodo.close();
         energ.close();
+        energia.close();
+
 
     return 0;
 }
 
+
 // defino la función leer vector
-void leer_vector(double vector[N],string nombre)
-{
+void leer_vector(double vector[N],string nombre){
     int i;
     ifstream fich;
 
@@ -278,14 +311,17 @@ void reesc_v(double vector[N])
 void calc_a(double vector[N],double vector1[N],double vector2[N],double vector3[N]){
     int i,j;
     
+    for(i=0;i<N;i++){
+        vector[i]=0;
+    }
+
     for(i=1;i<N;i++){
         for(j=0;j<N;j++){
             if(i!=j){
-            vector[i]=vector[i]+((vector1[j])*(vector2[i]-vector2[j]))/(pow(sqrt(((vector2[i]-vector2[j])*(vector2[i]-vector2[j]))+((vector3[i]-vector3[j])*(vector3[i]-vector3[j]))),3));
+            vector[i]=vector[i]-(vector1[j]*(vector2[i]-vector2[j]))/(pow(abs(sqrt(((vector2[i]-vector2[j])*(vector2[i]-vector2[j]))+((vector3[i]-vector3[j])*(vector3[i]-vector3[j])))),3));
             }
             
         }
-        vector[i]=-vector[i];
 
     }
     return;
@@ -315,18 +351,6 @@ void calc_vh(double h, double vector[N], double v1[N], double v2[N]){
     }  
 }
 
-void calc_T(double v[N], double v1[N],double temp){
-    int i;
-    for(i=1;i<N;i++){
-        if(v[i]==0){
-            if(v1[i]>=0){
-             v[N]=2*temp;
-            }
-        }
-    }
-    return;
-}
-
 double calc_E(double ep[N],double ec[N], double v1[N], double v2[N], double v3[N], double v4[N], double v5[N]){
     int i,j;
     double SumE,Energia;
@@ -347,4 +371,26 @@ double calc_E(double ep[N],double ec[N], double v1[N], double v2[N], double v3[N
     }
     return SumE;
     
+}
+
+double reesc_t(double t)
+{
+    t=t*sqrt(G*MS/C*C*C);
+        return t;
+}
+
+double calc_energia(double vx[N],double vy[N],double x[N],double m[N],double y[N]){
+
+    int i;
+    double E;
+    E=0.0;
+
+    //Le vamos a dar las velocidades y las posiciones de los planetas y calculará la energia total como al suma de las energias de todos
+    for(i=1;i<N;i++){
+        E=E+0.5*m[i]*abs((vx[i]*vx[i]+vy[i]*vy[i]))-MS*G*MS*m[i]/sqrt(pow(x[i],2)+pow(y[i],2));
+    }
+
+
+    return E;
+
 }

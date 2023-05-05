@@ -1,8 +1,8 @@
-4.040958e-308
-2.239782e-315
-2.239782e-315
-0.000000e+00
-2.245388e-315
-2.245393e-315
-0.000000e+00
-0.000000e+00
+Periodo:0.234432, Planeta: 1
+Periodo:0.613553, Planeta: 2
+Periodo:1, Planeta: 3
+Periodo:1.87546, Planeta: 4
+Periodo:12.011, Planeta: 5
+Periodo:30.3901, Planeta: 6
+Periodo:83.8114, Planeta: 7
+Periodo:163.943, Planeta: 8
