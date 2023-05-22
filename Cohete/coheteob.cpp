@@ -12,7 +12,7 @@ using namespace std;
 #define w 2.6617e-6
 #define Rt 6.378160e6
 #define Rl 1.7374e6
-#define pasos 450000
+#define pasos 300000 //esto lo fui cambiando según si quería ver más vídeo (por ejemplo ahora está a 3millones para ver la orbita entera del cohete+luna alrededor de la Tierra, pero antes lo tenía a un valor 4 veces menor aprox)
 
 //defino las funciones a utilizar
 double punto_r(double r_c, double phi_c, double p_phi, double t);
