@@ -70,7 +70,7 @@ int main(void){
 
     //inicio ciclo
     for(n=0;n<pasos;n++){
-        //escribir en el ficheros los valores de la funcion de onda, sumarlos todos y representar suma
+        //escribir en el fichero los valores de la funcion de onda, sumarlos todos y representar suma
         norma=0.0;
         
         for(j=0;j<N;j++){
@@ -95,7 +95,6 @@ int main(void){
             phi_j0[j]=xi[j]-phi_j0[j];
         }
          
-    
         fnorma<<norma<<endl;
         schr<<endl;
     }
